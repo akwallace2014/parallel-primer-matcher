@@ -38,15 +38,7 @@ public class Sequence {
      */
     Sequence(String name, String sequence, boolean forward) throws IllegalArgumentException {
 
-        if (sequence == null) {
-            throw new IllegalArgumentException("sequence cannot be null");
-        } 
-        else if (sequence.isBlank()) {
-            throw new IllegalArgumentException("sequence cannot be blank");
-        } 
-        else if (sequence.length() < 2) {
-            throw new IllegalArgumentException("sequence length must be > 2");
-        }
+        validateString(sequence);
 
         this.name = name;
         String trimmed = sequence.trim().toUpperCase();
@@ -65,15 +57,37 @@ public class Sequence {
     }
 
     /**
-     * Generates the complement of a sequence
+     * Getter for forward strand
+     * 
+     * @return the forward strand, read 5' to 3', left to right
+     */
+    public String getForward() {
+        return fwdStrand;
+    }
+
+    /**
+     * Getter for reverse strand
+     * 
+     * @return the reverse strand, read 5' to 3', left to right
+     */
+    public String getReverse() {
+        return revStrand;
+    }
+
+    /**
+     * Generates the complement of a sequence (read 5' to 3')
+     * Trims whitespaces from sequence
      * Only processes native bases (A/a, G/g, C/c, T/t)
      * 
      * @param seq the DNA sequence
      * @return the complement of the sequence in 5' to 3' directionality
      * @throws IllegalArgumentException if non-native bases detected
      */
-    private String generateComplement(String seq) throws IllegalArgumentException {
+    public static String generateComplement(String seq) throws IllegalArgumentException {
         // FIXME can be parallelized
+
+        validateString(seq);
+        seq = seq.trim();
 
         char[] original = seq.toCharArray();
         char[] complement = new char[seq.length()];
@@ -81,7 +95,7 @@ public class Sequence {
         final int MAX = seq.length();
         final int MIN = 0;
 
-        for (int o = MIN, c = (MAX - 1); o < MAX && c <= MIN; o++, c--) {
+        for (int o = MIN, c = (MAX - 1); o < MAX && c >= MIN; o++, c--) {
 
             char current = original[o];
             char comp;
@@ -108,4 +122,52 @@ public class Sequence {
         return new String(complement);
     }
 
+    /**
+     * Reverses the direction of a sequence to read 3' to 5', left to right
+     * Does not change the input sequence
+     * 
+     * @param seq input sequence
+     * @return a new sequence read 3' to 5'
+     * @throws IllegalArgumentException for the following cases:
+     *      - Blank sequence
+     *      - Null sequence
+     *      - Sequence < 2 characters long
+     */
+    public static String generateReverse(String seq) throws IllegalArgumentException {
+
+        validateString(seq);
+
+        // FIXME can be parallelize
+        char[] reverse = new char[seq.length()];
+
+        for (int i = 0, j = seq.length() - 1; i < seq.length() && j >= 0; i++, j--) {
+
+            reverse[j] = seq.charAt(i);
+        }
+
+        return new String(reverse);
+
+    }
+
+    /**
+     * Validates a sequence for use in Sequence class operations
+     * 
+     * @param str the String to validate
+     * @throws IllegalArgumentException for the following cases:
+     *      - Blank sequence
+     *      - Null sequence
+     *      - Sequence < 2 characters long
+     */
+    private static void validateString(String str) throws IllegalArgumentException {
+
+        if (str == null) {
+            throw new IllegalArgumentException("sequence cannot be null");
+        } 
+        else if (str.isBlank()) {
+            throw new IllegalArgumentException("sequence cannot be blank");
+        } 
+        else if (str.length() < 2) {
+            throw new IllegalArgumentException("sequence length must be > 2");
+        }
+    }
 }
