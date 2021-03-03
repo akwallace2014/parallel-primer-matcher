@@ -1,4 +1,4 @@
-/**
+/*
  * Alisa Wallace
  * CPSC 5600 Parallel Computing 
  * Seattle University, WQ 2021 with Kevin Lundeen
@@ -9,5 +9,4 @@
 
 public class Matcher {
 
-    // testing commit
 }
