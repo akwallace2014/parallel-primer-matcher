@@ -74,6 +74,27 @@ public class Sequence {
         return revStrand;
     }
 
+
+    /**
+     * Determines whether 2 Sequence objects are equal
+     * Does not account for name, only sequence contents 
+     * Does not test size or revStrand fields as they are all derived from fwdStrand field
+     * @return true if internal sequences are the same, false if not
+     */
+    @Override
+    public boolean equals(Object that) {
+
+        if (this == that) 
+            return true;
+
+        if (!(that instanceof Sequence)) 
+            return false;   
+        
+        Sequence thatObj = (Sequence) that;
+        
+        return this.fwdStrand.equals(thatObj.fwdStrand);
+        }
+
     /**
      * Generates the complement of a sequence (read 5' to 3')
      * Trims whitespaces from sequence
@@ -170,4 +191,5 @@ public class Sequence {
             throw new IllegalArgumentException("sequence length must be > 2");
         }
     }
+
 }
