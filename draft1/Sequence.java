@@ -24,6 +24,7 @@ public class Sequence {
 
     /**
      * Constructor
+     * Accepts a single sequence and auto-generates complement
      * Trims incoming sequence of whitespaces and coverts to all uppercase
      * Only native bases (A, C, G, T) supported
      * 
@@ -61,7 +62,7 @@ public class Sequence {
      * 
      * @return the forward strand, read 5' to 3', left to right
      */
-    public String getForward() {
+    public String forward() {
         return fwdStrand;
     }
 
@@ -70,10 +71,28 @@ public class Sequence {
      * 
      * @return the reverse strand, read 5' to 3', left to right
      */
-    public String getReverse() {
+    public String reverse() {
         return revStrand;
     }
 
+    /**
+     * Getter for length of sequences
+     * 
+     * @return length of the sequences
+     */
+    public int length() {
+        return length;
+    }
+
+
+    /**
+     * Getter for name of the sequences
+     * 
+     * @return name
+     */
+    public String name() {
+        return name;
+    }
 
     /**
      * Determines whether 2 Sequence objects are equal
