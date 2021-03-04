@@ -7,6 +7,9 @@
  * This is free and unencumbered software released into the public domain.
  */
 
+/**
+ * Generic string-matching class
+ */
 public class Matcher {
 
 }
