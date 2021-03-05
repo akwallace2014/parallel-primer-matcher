@@ -18,6 +18,10 @@ import java.util.ArrayList;
  * (https://www.geeksforgeeks.org/naive-algorithm-for-pattern-searching/)
  * 
  * Tests for 100% match between pattern and template
+ * 
+ * @author Alisa Wallace
+ * @version 1.0
+ * 
  */
 public class Matcher {
 
@@ -25,6 +29,7 @@ public class Matcher {
     protected String template;    // string in which we are searching for pattern
     protected String pattern;     // string we are looking for in template
     protected List<Integer> matches;    // start indices for matches
+    protected boolean analyzed;
 
     /**
      * Constructor
