@@ -10,9 +10,14 @@
 
 import java.util.Map;
 
+/**
+ * Specific to DNA sequences
+ */
 public class SequenceMatcher extends Matcher {
     
-    private Map<Integer, String> matchOutput;  
+    // maps start index of match to the sequence of the PCR product resulting
+    // from using this primer-template pair
+    private Map<Integer, String> matchProduct;  
 
     public SequenceMatcher(Sequence template, Sequence primer) {
         super(template.forward(), primer.forward());
