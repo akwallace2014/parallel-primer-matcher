@@ -21,9 +21,10 @@ import java.util.ArrayList;
  */
 public class Matcher {
 
-    private static final int MIN_LENGTH = 1;
-    private String template;    // string in which we are searching for pattern
-    private String pattern;     // string we are looking for in template
+    protected static final int MIN_LENGTH = 1;
+    protected String template;    // string in which we are searching for pattern
+    protected String pattern;     // string we are looking for in template
+    protected List<Integer> matches;    // start indices for matches
 
     /**
      * Constructor
@@ -35,7 +36,7 @@ public class Matcher {
         validateInput(template, pattern);
         this.template = template;
         this.pattern = pattern;
-
+        matches = new ArrayList<>();
     }
 
     /**
@@ -45,8 +46,6 @@ public class Matcher {
      * null if there are no matches
      */
     public List<Integer> findMatches() {
-        
-        ArrayList<Integer> matches = new ArrayList<>();
         
         if (pattern.equals(template)) {
             matches.add(0);
