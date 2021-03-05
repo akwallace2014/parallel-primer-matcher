@@ -7,10 +7,15 @@
  * This is free and unencumbered software released into the public domain.
  */
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Generic string-matching class
  * Uses a naive string-matching algorithm to find a pattern string in a 
  * template string.
+ * Naive algorithm sourced from GeeksForGeeks 
+ * (https://www.geeksforgeeks.org/naive-algorithm-for-pattern-searching/)
  * 
  * Tests for 100% match between pattern and template
  */
@@ -30,6 +35,43 @@ public class Matcher {
         validateInput(template, pattern);
         this.template = template;
         this.pattern = pattern;
+
+    }
+
+    /**
+     * Naive string-matching algorithm
+     * Looks for all instances of exact matches between template and pattern
+     * @return a list of start indices in template where there is a match or 
+     * null if there are no matches
+     */
+    public List<Integer> findMatches() {
+        
+        ArrayList<Integer> matches = new ArrayList<>();
+        
+        if (pattern.equals(template)) {
+            matches.add(0);
+            return matches;
+        }
+    
+        int tLength = template.length();
+        int pLength = pattern.length();
+
+        for (int t = 0; t <= tLength - pLength; t++) {
+            
+            int p;      // tracks pattern index
+            for (p = 0; p < pLength; p++) {
+                if (template.charAt(t + p) != pattern.charAt(p)) 
+                    break;
+            }
+
+            if (p == tLength)   // we've found the complete pattern
+                matches.add(t);
+        }
+
+        if (matches.isEmpty()) 
+            return null;
+        
+        return matches;
 
     }
 
