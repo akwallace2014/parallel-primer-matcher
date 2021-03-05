@@ -18,8 +18,8 @@
 public class Sequence {
 
     private String name;
-    private String fwdStrand;   // 5' to 3'
-    private String revStrand;   // 5' to 3'
+    private String fwdSeq;   // 5' to 3'
+    private String revSeq;   // 5' to 3'
     private int length;
 
     /**
@@ -45,12 +45,12 @@ public class Sequence {
         String trimmed = sequence.trim().toUpperCase();
 
         if (forward) {
-            this.fwdStrand = trimmed;
-            this.revStrand = generateComplement(trimmed);
+            this.fwdSeq = trimmed;
+            this.revSeq = generateComplement(trimmed);
         }
         else {
-            this.revStrand = trimmed;
-            this.fwdStrand = generateComplement(trimmed);
+            this.revSeq = trimmed;
+            this.fwdSeq = generateComplement(trimmed);
         }
         
         this.length = trimmed.length();
@@ -63,7 +63,7 @@ public class Sequence {
      * @return the forward strand, read 5' to 3', left to right
      */
     public String forward() {
-        return fwdStrand;
+        return fwdSeq;
     }
 
     /**
@@ -72,7 +72,7 @@ public class Sequence {
      * @return the reverse strand, read 5' to 3', left to right
      */
     public String reverse() {
-        return revStrand;
+        return revSeq;
     }
 
     /**
@@ -111,7 +111,7 @@ public class Sequence {
         
         Sequence thatObj = (Sequence) that;
         
-        return this.fwdStrand.equals(thatObj.fwdStrand);
+        return this.fwdSeq.equals(thatObj.fwdSeq);
         }
 
     /**
