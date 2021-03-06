@@ -7,31 +7,6 @@
  * This is free and unencumbered software released into the public domain.
  */
 
-/**
- * Encapsulates a double-stranded DNA sequence.
- * Accepts a single sequence that can be designated as either the forward
- * strand or the reverse strand and auto-generates the reverse complement.
- * Both forward and reverse sequences are stored in 5' to 3' direction for
- * clarity, as the designation of "forward" and "reverse" is arbitrary and
- * only refers to which strand should be read 5' to 3'.
- * In reality the two strands are anitparallel and the reverse strand is the 
- * reverse complement of the forward strand and is thus read 3' to 5'.
- * A static utility method is included to reverse any sequence to be 3' to 5'
- * for use in printing or other analysis.  
- * 
- * Example of actual sequence alignment 
- * 5'  A A G T C C T A  3' (forward strand)
- * 3'  T T C A G G A T  5' (reverse strand, i.e., reverse complement)
- * 
- * Example of how above sequences are stored:
- * 5'  A A G T C C T A 3' (forward strand)
- * 5'  T A G G A C T T 3' (reverse strand)
- * 
- * @author Alisa Wallace
- * @version 1.0
- * 
- */
-
 public class Sequence {
 
     private String name;
@@ -54,14 +29,14 @@ public class Sequence {
      *      - Sequence < 2 characters long
      *      - Non-native bases detected in sequence
      */
-    Sequence(String name, String sequence, boolean forward) throws IllegalArgumentException {
+    Sequence(String name, String sequence, Strand direction) throws IllegalArgumentException {
 
         validateString(sequence);
 
         this.name = name;
         String trimmed = sequence.replaceAll("//s", "").toUpperCase();
 
-        if (forward) {
+        if (direction.equals(Strand.FWD)) {
             this.fwdSeq = trimmed;
             this.revSeq = generateComplement(trimmed);
         }

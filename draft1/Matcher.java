@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Generic string-matching class
+ * Static string-matching class
  * Uses a naive string-matching algorithm to find a pattern string in a 
  * template string.
  * Naive algorithm sourced from GeeksForGeeks 
@@ -26,32 +26,18 @@ import java.util.ArrayList;
 public class Matcher {
 
     protected static final int MIN_LENGTH = 1;
-    protected String template;    // string in which we are searching for pattern
-    protected String pattern;     // string we are looking for in template
-    protected List<Integer> matches;    // start indices for matches
-    protected boolean analyzed;
-
-    /**
-     * Constructor
-     * @param template
-     * @param pattern
-     * @throws IllegalArgumentException
-     */
-    public Matcher(String template, String pattern) throws IllegalArgumentException{
-        validateInput(template, pattern);
-        this.template = template;
-        this.pattern = pattern;
-        matches = new ArrayList<>();
-    }
-
     /**
      * Naive string-matching algorithm
      * Looks for all instances of exact matches between template and pattern
      * @return a list of start indices in template where there is a match or 
      * null if there are no matches
      */
-    public List<Integer> findMatches() {
+    public static List<Integer> findMatches(String template, String pattern) throws IllegalArgumentException {
         
+        validateInput(template, pattern);
+        
+        ArrayList<Integer> matches = new ArrayList<>();
+
         if (pattern.equals(template)) {
             matches.add(0);
             return matches;
@@ -79,7 +65,7 @@ public class Matcher {
 
     }
 
-    private void validateInput(String template, String pattern) throws IllegalArgumentException {
+    private static void validateInput(String template, String pattern) throws IllegalArgumentException {
         if (template == null || pattern == null)
             throw new IllegalArgumentException("Input strings cannot be null.");
 
