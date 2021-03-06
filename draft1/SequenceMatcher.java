@@ -7,9 +7,7 @@
  * This is free and unencumbered software released into the public domain.
  */
 
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Specifies pattern matching for DNA sequences.
@@ -41,9 +39,10 @@ public class SequenceMatcher {
      *  
      * @param templateName name associated with this sequence
      * @param templateSeq 5' to 3' 
-     * @param templateDirection
+     * @param templateDirection direction to be associated with the provided sequence
+     * @throws IllegalArgumentException for invalid sequence input
      */
-    public SequenceMatcher(String templateName, String templateSeq, Strand templateDirection) {
+    public SequenceMatcher(String templateName, String templateSeq, Strand templateDirection) throws IllegalArgumentException {
 
         this.template = new Sequence(templateName, templateSeq, templateDirection);
 
@@ -77,9 +76,12 @@ public class SequenceMatcher {
      * @param primerSeq 5' to 3' sequence of the primer
      * @param primerDirection FWD (forward) or REV (reverse)
      */
-    public HashMap<Integer, String> findMatchProducts(String primerSeq, Strand primerDirection) {
+    public HashMap<Integer, String> findMatchProducts(String primerSeq, Strand primerDirection) throws IllegalArgumentException {
         
+       Sequence.validateSequence(primerSeq);
+
         String searchTemplate;
+
         if (primerDirection.equals(Strand.FWD)) {
             searchTemplate = template.forward();
         }
@@ -87,11 +89,15 @@ public class SequenceMatcher {
             searchTemplate = template.reverse();
         }
 
+        ArrayList<Integer> matches = Matcher.findMatches(searchTemplate, primerSeq);
+
+        if (matches == null)
+            return null;
         
         // use matches to get substrings and store
         for (int i = 0; i < matches.size(); i++) {
             int matchLoc = matches.get(i);
-            String product = template.substring(matchLoc);
+            String product = searchTemplate.substring(matchLoc);
             matchProducts.put(matchLoc, product);
         }
 

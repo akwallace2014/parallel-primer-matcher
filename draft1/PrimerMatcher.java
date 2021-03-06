@@ -16,15 +16,23 @@ public class PrimerMatcher {
 
 
     public static void main(String[] args) {
-        System.out.println("Template = " + template);
-        System.out.println("Primer = " + primer);
-        SequenceMatcher test1 = new SequenceMatcher(template, primer);
-        HashMap<Integer, String> test1Results = test1.findMatchProducts();
+        System.out.println("Template FWD = " + template);
+        System.out.println("Template REV = " + Sequence.generateComplement(template));
 
-        Set<Integer> indices = test1Results.keySet();
-        for (int i : indices) {
+        System.out.println("Primer = " + primer);
+
+        SequenceMatcher test1 = new SequenceMatcher("Template1", template, Strand.FWD);
+        HashMap<Integer, String> test1Results = test1.findMatchProducts(primer, Strand.REV);
+
+        if (test1Results == null) {
+            System.out.println("No matches");
+        }
+        else {
+            Set<Integer> indices = test1Results.keySet();
+            for (int i : indices) {
             System.out.println("Match at template location " + i + ", output:");
             System.out.println(test1Results.get(i));
+            }
         }
 
     }

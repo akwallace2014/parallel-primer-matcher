@@ -31,7 +31,7 @@ public class Sequence {
      */
     Sequence(String name, String sequence, Strand direction) throws IllegalArgumentException {
 
-        validateString(sequence);
+        validateSequence(sequence);
 
         this.name = name;
         String trimmed = sequence.replaceAll("//s", "").toUpperCase();
@@ -118,7 +118,7 @@ public class Sequence {
     public static String generateComplement(String seq) throws IllegalArgumentException {
         // FIXME can be parallelized
 
-        validateString(seq);
+        validateSequence(seq);
         seq = seq.trim();
 
         char[] original = seq.toCharArray();
@@ -167,7 +167,7 @@ public class Sequence {
      */
     public static String generateReverse(String seq) throws IllegalArgumentException {
 
-        validateString(seq);
+        validateSequence(seq);
 
         // FIXME can be parallelize
         char[] reverse = new char[seq.length()];
@@ -182,7 +182,8 @@ public class Sequence {
     }
 
     /**
-     * Validates a sequence for use in Sequence class operations
+     * Validates a sequence for use in operations that involve Sequence
+     * objects
      * 
      * @param str the String to validate
      * @throws IllegalArgumentException for the following cases:
@@ -190,7 +191,7 @@ public class Sequence {
      *      - Null sequence
      *      - Sequence < 2 characters long
      */
-    private static void validateString(String str) throws IllegalArgumentException {
+    public static void validateSequence(String str) throws IllegalArgumentException {
 
         if (str == null) {
             throw new IllegalArgumentException("sequence cannot be null");

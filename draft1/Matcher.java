@@ -7,7 +7,6 @@
  * This is free and unencumbered software released into the public domain.
  */
 
-import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -32,7 +31,7 @@ public class Matcher {
      * @return a list of start indices in template where there is a match or 
      * null if there are no matches
      */
-    public static List<Integer> findMatches(String template, String pattern) throws IllegalArgumentException {
+    public static ArrayList<Integer> findMatches(String template, String pattern) throws IllegalArgumentException {
         
         validateInput(template, pattern);
         
@@ -54,8 +53,10 @@ public class Matcher {
                     break;
             }
 
-            if (p == tLength)   // we've found the complete pattern
+            if (p == pLength) {
+                // we've found the complete pattern
                 matches.add(t);
+            } 
         }
 
         if (matches.isEmpty()) 
