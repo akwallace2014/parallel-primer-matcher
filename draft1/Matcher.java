@@ -25,6 +25,9 @@ import java.util.ArrayList;
 public class Matcher {
 
     protected static final int MIN_LENGTH = 1;
+    
+    // TODO stop making method static and make this a parallelized class
+
     /**
      * Naive string-matching algorithm
      * Looks for all instances of exact matches between template and pattern
@@ -58,9 +61,6 @@ public class Matcher {
                 matches.add(t);
             } 
         }
-
-        if (matches.isEmpty()) 
-            return null;
         
         return matches;
 

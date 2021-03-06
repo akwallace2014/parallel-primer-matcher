@@ -10,9 +10,11 @@
 public class Sequence {
 
     private String name;
-    private String fwdSeq;   // 5' to 3'
-    private String revSeq;   // 5' to 3'
+    private String sequence;            // 5' to 3'
+    private String complement;          // 5' to 3'
+    private String reverseComplement;   // 3' to 5'
     private int length;
+    private boolean doubleStranded;
 
     /**
      * Constructor
@@ -22,49 +24,53 @@ public class Sequence {
      * 
      * @param name identifier for this sequence
      * @param sequence the DNA sequence 5' to 3'
-     * @param forward true if provided sequence is forward strand, false if it is reverse strand
+     * @param doubleStranded true if this sequence represents dsDNA, false if
+     * single-stranded
      * @throws IllegalArgumentException for the following cases:
      *      - Blank sequence
      *      - Null sequence
      *      - Sequence < 2 characters long
      *      - Non-native bases detected in sequence
      */
-    Sequence(String name, String sequence, Strand direction) throws IllegalArgumentException {
+    Sequence(String name, String sequence, boolean doubleStranded) throws IllegalArgumentException {
 
         validateSequence(sequence);
 
         this.name = name;
         String trimmed = sequence.replaceAll("//s", "").toUpperCase();
 
-        if (direction.equals(Strand.FWD)) {
-            this.fwdSeq = trimmed;
-            this.revSeq = generateComplement(trimmed);
-        }
-        else {
-            this.revSeq = trimmed;
-            this.fwdSeq = generateComplement(trimmed);
-        }
-        
-        this.length = trimmed.length();
-
+        this.sequence = trimmed;
+        this.doubleStranded = doubleStranded;
+        length = this.sequence.length();
+        this.complement = generateComplement(this.sequence);
+        this.reverseComplement = generateReverse(complement);
     }
 
     /**
-     * Getter for forward strand
+     * Getter for sequence
      * 
-     * @return the forward strand, read 5' to 3', left to right
+     * @return the sequence read 5' to 3', left to right
      */
-    public String forward() {
-        return fwdSeq;
+    public String sequence() {
+        return sequence;
     }
 
     /**
-     * Getter for reverse strand
+     * Getter for complement
      * 
-     * @return the reverse strand, read 5' to 3', left to right
+     * @return the complement of the sequence read 5' to 3', left to right
      */
-    public String reverse() {
-        return revSeq;
+    public String complement() {
+        return complement;
+    }
+
+    /**
+     * Getter for reverse complement
+     * 
+     * @return the reverse complement of the sequence read 3' to 5', left to right
+     */
+    public String reverseComplement() {
+        return reverseComplement;
     }
 
     /**
@@ -87,6 +93,15 @@ public class Sequence {
     }
 
     /**
+     * Getter for double-stranded
+     * 
+     * @return true if double-stranded, false if single-stranded
+     */
+    public boolean isDoubleStranded() {
+        return doubleStranded;
+    }
+
+    /**
      * Determines whether 2 Sequence objects are equal
      * Does not account for name, only sequence contents 
      * Does not test size or revStrand fields as they are all derived from fwdStrand field
@@ -103,7 +118,7 @@ public class Sequence {
         
         Sequence thatObj = (Sequence) that;
         
-        return this.fwdSeq.equals(thatObj.fwdSeq);
+        return this.sequence.equals(thatObj.sequence);
         }
 
     /**
@@ -115,7 +130,7 @@ public class Sequence {
      * @return the complement of the sequence in 5' to 3' directionality
      * @throws IllegalArgumentException if non-native bases detected
      */
-    public static String generateComplement(String seq) throws IllegalArgumentException {
+    private String generateComplement(String seq) throws IllegalArgumentException {
         // FIXME can be parallelized
 
         validateSequence(seq);
@@ -165,7 +180,7 @@ public class Sequence {
      *      - Null sequence
      *      - Sequence < 2 characters long
      */
-    public static String generateReverse(String seq) throws IllegalArgumentException {
+    private String generateReverse(String seq) throws IllegalArgumentException {
 
         validateSequence(seq);
 
@@ -191,7 +206,7 @@ public class Sequence {
      *      - Null sequence
      *      - Sequence < 2 characters long
      */
-    public static void validateSequence(String str) throws IllegalArgumentException {
+    private void validateSequence(String str) throws IllegalArgumentException {
 
         if (str == null) {
             throw new IllegalArgumentException("sequence cannot be null");
@@ -204,4 +219,14 @@ public class Sequence {
         }
     }
 
+
+    private String generateReverseComplement(String seq) {
+
+        validateSequence(seq);
+
+        String str = generateComplement(seq);
+        str = generateReverse(str);
+
+        return str;
+    }
 }
