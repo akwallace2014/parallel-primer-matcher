@@ -14,8 +14,11 @@ public class ReplicationProductTest {
 
     String t1sub4 = "GCTGCTGCTGCTGCTAAAAAAAAAAAA";
 
-    String p1Fwd = "AAAAAAAAAAAA";
-    String p1Rev = "TTTTTTTTTTTT";
+    String p1Fwd = "AAAAAAAAAAAA";      // shouldn't match
+    String p1Rev = "TTTTTTTTTTTT";      // should match
+
+    // very close to match, shouldn't match
+    String p1RevPartialMatch = "TTTTTTTTTTAT";  
 
     Sequence template1 = new Sequence("template1", t1, false);
     Sequence primer1Fwd = new Sequence("primer1Fwd", p1Fwd, false);
@@ -82,6 +85,18 @@ public class ReplicationProductTest {
     public void testFindAllMatchesNoMatches() {
 
         ReplicationProduct rp2 = new ReplicationProduct(template1, primer1Fwd);
+
+        rp2.findAllMatches();
+
+        assertTrue(rp2.isAnalyzed());
+        assertTrue(rp2.isEmpty());
+        assertEquals(0, rp2.numMatches());
+    }
+
+    @Test
+    public void testFindAllMatchesPartialMatch() {
+        Sequence p1partial = new Sequence("t1 partial match", p1RevPartialMatch, false);
+        ReplicationProduct rp2 = new ReplicationProduct(template1, p1partial);
 
         rp2.findAllMatches();
 
