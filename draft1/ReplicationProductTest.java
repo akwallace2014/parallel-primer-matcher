@@ -89,4 +89,21 @@ public class ReplicationProductTest {
         assertTrue(rp2.isEmpty());
         assertEquals(0, rp2.numMatches());
     }
+
+    @Test
+    public void testMatcherException() {
+
+        // swap template and primer so matching looks for template sequence
+        // in primer sequence
+        ReplicationProduct rp3 = new ReplicationProduct(primer1Rev, template1);
+
+        try {
+            rp3.findAllMatches();
+            fail();
+        }
+        catch (IllegalArgumentException e) {}
+
+
+    }
+
 }
