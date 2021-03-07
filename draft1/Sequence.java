@@ -37,12 +37,13 @@ public class Sequence {
         validateSequence(sequence);
 
         this.name = name;
-        String trimmed = sequence.replaceAll("//s", "").toUpperCase();
+        String trimmed = sequence.replaceAll("\\s", "");
+        trimmed = trimmed.toUpperCase();
 
         this.sequence = trimmed;
         this.doubleStranded = doubleStranded;
-        length = this.sequence.length();
-        this.complement = generateComplement(this.sequence);
+        length = trimmed.length();
+        this.complement = generateComplement(trimmed);
         this.reverseComplement = generateReverse(complement);
     }
 
@@ -133,9 +134,6 @@ public class Sequence {
     private String generateComplement(String seq) throws IllegalArgumentException {
         // FIXME can be parallelized
 
-        validateSequence(seq);
-        seq = seq.trim();
-
         char[] original = seq.toCharArray();
         char[] complement = new char[seq.length()];
 
@@ -180,10 +178,10 @@ public class Sequence {
      *      - Null sequence
      *      - Sequence < 2 characters long
      */
-    private String generateReverse(String seq) throws IllegalArgumentException {
+    public static String generateReverse(String seq) throws IllegalArgumentException {
 
         validateSequence(seq);
-
+        
         // FIXME can be parallelize
         char[] reverse = new char[seq.length()];
 
@@ -206,7 +204,7 @@ public class Sequence {
      *      - Null sequence
      *      - Sequence < 2 characters long
      */
-    private void validateSequence(String str) throws IllegalArgumentException {
+    private static void validateSequence(String str) throws IllegalArgumentException {
 
         if (str == null) {
             throw new IllegalArgumentException("sequence cannot be null");
@@ -219,14 +217,4 @@ public class Sequence {
         }
     }
 
-
-    private String generateReverseComplement(String seq) {
-
-        validateSequence(seq);
-
-        String str = generateComplement(seq);
-        str = generateReverse(str);
-
-        return str;
-    }
 }
