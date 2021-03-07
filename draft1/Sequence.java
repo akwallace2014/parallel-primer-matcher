@@ -131,8 +131,9 @@ public class Sequence {
      * @return the complement of the sequence in 5' to 3' directionality
      * @throws IllegalArgumentException if non-native bases detected
      */
-    private String generateComplement(String seq) throws IllegalArgumentException {
+    public static String generateComplement(String seq) throws IllegalArgumentException {
         // FIXME can be parallelized
+        validateSequence(seq);
 
         char[] original = seq.toCharArray();
         char[] complement = new char[seq.length()];
@@ -181,7 +182,7 @@ public class Sequence {
     public static String generateReverse(String seq) throws IllegalArgumentException {
 
         validateSequence(seq);
-        
+
         // FIXME can be parallelize
         char[] reverse = new char[seq.length()];
 
