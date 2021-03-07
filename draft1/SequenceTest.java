@@ -149,4 +149,6 @@ public class SequenceTest {
         assertEquals(s2rc, seq2.reverseComplement());
         assertEquals(s3rc, seq3.reverseComplement());
     }
+
+    // TODO test equals
 }

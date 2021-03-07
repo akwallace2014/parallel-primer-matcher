@@ -1,7 +1,6 @@
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 
 public class ReplicationProductTest {
     
@@ -79,4 +78,15 @@ public class ReplicationProductTest {
         assertEquals(expected4, rp1.getMatchProduct(3));
     }
 
+    @Test
+    public void testFindAllMatchesNoMatches() {
+
+        ReplicationProduct rp2 = new ReplicationProduct(template1, primer1Fwd);
+
+        rp2.findAllMatches();
+
+        assertTrue(rp2.isAnalyzed());
+        assertTrue(rp2.isEmpty());
+        assertEquals(0, rp2.numMatches());
+    }
 }
