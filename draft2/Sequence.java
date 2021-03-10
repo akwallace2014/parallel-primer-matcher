@@ -7,10 +7,15 @@
  * This is free and unencumbered software released into the public domain.
  */
 
+/**
+ * Notes: to conserve space, setting reverse sequence and reverse
+ * complement must be done manually 
+ */
 public class Sequence {
 
     private String name;
-    private String sequence;            // DNA sequence          
+    private String sequence;            // DNA sequence 
+    private String reverse;         
     private Directionality direction;   // 5' or 3' when read left to right
     private Sequence reverseComplement; 
     private int length;
@@ -20,6 +25,10 @@ public class Sequence {
      * Accepts a single sequence and auto-generates reverse complement
      * Trims incoming sequence of all whitespaces and converts to all uppercase
      * Only native bases (A, C, G, T) supported
+     * 
+     * Defaults to reverse and reverseComplement fields being null to 
+     * conserve space in instances of very large sequences.  These fields
+     * must be manually set instead.
      * 
      * @param name identifier for this sequence
      * @param sequence the DNA sequence
@@ -44,7 +53,9 @@ public class Sequence {
 
         this.direction = direction;
 
-        reverseComplement = makeReverseComplement();
+        reverseComplement = null;
+
+        reverse = null;
     }
 
     /**
@@ -73,16 +84,35 @@ public class Sequence {
      * @return the reverse of the sequence
      */
     public String reverse() {
-        return generateReverse(this.sequence);
+        if (reverse == null) 
+            return generateReverse(this.sequence);
+        
+        return reverse;
     }
 
     /**
-     * Makes a reverse complement for a sequence
-     * Example:  sequence = 5' CAT 3', reverse complement = 3' GTA 5'
-     * 
-     * @return the reverse complement of the sequence
+     * Auto-generates and sets reverse sequence field for this Sequence.
      */
-    private Sequence makeReverseComplement() {
+    public void setReverse() {
+        reverse = generateComplement(this.sequence);
+    }
+
+
+    /**
+     * Auto-generates and sets the reverse complement for this Sequence.  
+     * 
+     * @param name name to be stored for the reverse complement
+     * 
+     */
+    public void setReverseComplement(String name) {
+
+        String rcName;
+        if (name == null || name.isEmpty()) 
+            rcName = this.name + " RC";
+        else {
+            rcName = name;
+        }
+
         Directionality d;
         if (direction.equals(FIVE_PRIME))
             d = THREE_PRIME;
@@ -90,11 +120,9 @@ public class Sequence {
             d = FIVE_PRIME;
         }
         
-        String rcName = this.name + " REVERSE COMPLEMENT";
+        String rcSeq = generateComplement(generateReverse(s.sequence));
 
-        String rcSeq = generateComplement(generateReverse(this.sequence));
-
-        return new Sequence(rcName, rcSeq, d);
+        this.reverseComplement = new Sequence(rcName, rcSeq, d);
     }
 
     /**
