@@ -91,7 +91,9 @@ public class Sequence {
      * Auto-generates and sets reverse sequence field for this Sequence.
      */
     public void setReverse() {
-        reverse = generateReverse(this.sequence);
+        if (reverse == null) {
+            reverse = generateReverse(this.sequence);
+        }
     }
 
 
@@ -102,24 +104,26 @@ public class Sequence {
      * 
      */
     public void setReverseComplement(String name) {
-
-        String rcName;
-        if (name == null || name.isEmpty()) 
-            rcName = this.name + " RC";
-        else {
-            rcName = name;
-        }
-
-        Directionality d;
-        if (direction.equals(Directionality.FIVE_PRIME))
-            d = Directionality.THREE_PRIME;
-        else {
-            d = Directionality.FIVE_PRIME;
-        }
         
-        String rcSeq = generateComplement(generateReverse(this.sequence));
+        if (reverseComplement == null) {
+            String rcName;
+            if (name == null || name.isEmpty()) 
+                rcName = this.name + " RC";
+            else {
+                rcName = name;
+            }
 
-        this.reverseComplement = new Sequence(rcName, rcSeq, d);
+            Directionality d;
+            if (direction.equals(Directionality.FIVE_PRIME))
+                d = Directionality.THREE_PRIME;
+            else {
+                d = Directionality.FIVE_PRIME;
+            }
+            
+            String rcSeq = generateComplement(this.sequence);
+
+            this.reverseComplement = new Sequence(rcName, rcSeq, d);
+        }
     }
 
     /**
@@ -171,28 +175,15 @@ public class Sequence {
         return this.direction.equals(thatObj.direction) && this.sequence.equals(thatObj.sequence);
         }
 
-    /**
-     * Generates the complement of any sequence
-     * Trims whitespaces from sequence
-     * Only processes native bases (A/a, G/g, C/c, T/t)
-     * 
-     * @param seq the DNA sequence
-     * @return the complement of the sequence in 5' to 3' directionality
-     * @throws IllegalArgumentException if non-native bases detected
-     */
     public static String generateComplement(String seq) throws IllegalArgumentException {
-        // FIXME can be parallelized
         validateSequence(seq);
 
         char[] original = seq.toCharArray();
         char[] complement = new char[seq.length()];
 
-        final int MAX = seq.length();
-        final int MIN = 0;
+        for (int i = 0; i < seq.length(); i++) {
 
-        for (int o = MIN, c = (MAX - 1); o < MAX && c >= MIN; o++, c--) {
-
-            char current = original[o];
+            char current = original[i];
             char comp;
             switch (current) {
                 case 'A':
@@ -211,11 +202,11 @@ public class Sequence {
                     throw new IllegalArgumentException("Only native bases (A, C, G, T) supported");
             }
 
-            complement[c] = comp;
+            complement[i] = comp;
         }
 
         return new String(complement);
-    }
+    }  
 
     /**
      * Reverses the direction of a sequence 

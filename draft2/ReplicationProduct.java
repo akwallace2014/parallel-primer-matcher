@@ -89,7 +89,15 @@ public class ReplicationProduct {
 
         for (int i = 0; i < matchLocations.size(); i++) {
             int location = matchLocations.get(i);
-            String product = text.substring(location);
+
+            String product;
+            if (primer.direction().equals(Directionality.FIVE_PRIME)) {
+               product = text.substring(location);
+            }
+            else {
+                product = text.substring(0, location + primer.length());
+            }
+    
             String productName = this.name + " product " + i;
             Sequence s = new Sequence(productName, product, primer.direction());
             matchProducts.add(s);
