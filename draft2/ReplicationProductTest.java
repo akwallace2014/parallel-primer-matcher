@@ -27,7 +27,6 @@ public class ReplicationProductTest {
     Sequence primer1RC = new Sequence("primer1Rev", p1Rev, three);
 
     @Test
-    // test constructor 
     public void testConstructor() {
 
         ReplicationProduct rp1 = new ReplicationProduct("Test 1", template1, primer1Rev);

@@ -11,21 +11,37 @@ import java.util.*;
 
 public class PrimerMatcher {
 
+    private static final Directionality FIVE = Directionality.FIVE_PRIME;
+    private static final Directionality THREE = Directionality.THREE_PRIME;
+
     public static void main(String[] args) {
         
-        String primerSeq = "TTT";
-        String template = buildTemplate(25, primerSeq, 10);
-        String templateReverse = Sequence.generateReverse(template);
-        System.out.println("Template = " + template);
-        System.out.println("Template reverse = " + templateReverse);
+        String primer = "TTTTTTTTTTTTTT";
+        Sequence primer5p = new Sequence("test primer", primer, FIVE);
+        int targetLocation = 30;
 
-        Sequence p = new Sequence("test primer", primerSeq, false);
-        Sequence t = new Sequence("test template", template, false);
-        ReplicationProduct rp = new ReplicationProduct(t, p);
+        System.out.println("Primer sequence 5' " + primer + " 3'");
+
+        String template = buildTemplate(50, primer, targetLocation, FIVE);
+
+        Sequence template5p = new Sequence("test template", template, FIVE);
+        template5p.setReverseComplement(null);
+        Sequence template3p = template5p.reverseComplement();
+
+        System.out.println("Template sequence 5' " + template5p.sequence() + " 3'");
+
+        System.out.println("Template sequence 3' " + template3p.sequence() + " 5'");
+
+        ReplicationProduct rp = new ReplicationProduct("Test 1", template3p, primer5p);
+
         rp.findAllMatches();
-        // expected location = templateSize - (targetLocIndex + primerLength)
+
+        System.out.println("Number of matches found = " + rp.numMatches());
+
         for (int i = 0; i < rp.numMatches(); i++) {
-            System.out.println("Match found at template index " + rp.getMatchLocation(i) + ", product = " + rp.getMatchProduct(i));
+            Sequence product = rp.getMatchProduct(i);
+            String sequence = product.sequence();
+            System.out.println("Match found at template index " + rp.getMatchLocation(i) + ", product = " + sequence);
         }
 
 
@@ -46,9 +62,7 @@ public class PrimerMatcher {
      * @param targetPrimerLocations indices where target primer should occur (in the reverse complement of this template)
      * @return the complete template
      */
-    private static String buildTemplate(int templateSize, String targetPrimer, int targetPrimerLocation) {
-
-        // ArrayList<Integer> templateInserts = reconfigure(templateSize, targetPrimerLocations);
+    private static String buildTemplate(int templateSize, String targetPrimer, int targetPrimerLocation, Directionality primerDirection) {
 
         int index = 0; 
         StringBuilder sb = new StringBuilder();
@@ -65,10 +79,7 @@ public class PrimerMatcher {
             }
         }
 
-        // return sb.toString();
-        String templateRC = sb.toString();
-        Sequence template = new Sequence(null, templateRC, false);
-        return template.reverseComplement();
+        return sb.toString();
     }
 
     private static String getRandomBase() {
@@ -83,15 +94,5 @@ public class PrimerMatcher {
         else {
             return "A";
         }
-    }
-
-    private static ArrayList<Integer> reconfigure(int size, ArrayList<Integer> locs) {
-        ArrayList<Integer> updated = new ArrayList<>();
-        
-        for (int i = 0; i < locs.size(); i++) {
-            int original = locs.get(i);
-            updated.add(size - original - 1);
-        }
-        return updated;
     }
 }

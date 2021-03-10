@@ -175,6 +175,7 @@ public class Sequence {
         return this.direction.equals(thatObj.direction) && this.sequence.equals(thatObj.sequence);
         }
 
+    
     public static String generateComplement(String seq) throws IllegalArgumentException {
         validateSequence(seq);
 
