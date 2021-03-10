@@ -22,7 +22,7 @@ public class PrimerMatcher {
 
         System.out.println("Primer sequence 5' " + primer + " 3'");
 
-        String template = buildTemplate(50, primer, targetLocation, FIVE);
+        String template = buildTemplateWithPrimer(50, primer, targetLocation);
 
         Sequence template5p = new Sequence("test template", template, FIVE);
         template5p.setReverseComplement(null);
@@ -62,7 +62,7 @@ public class PrimerMatcher {
      * @param targetPrimerLocations indices where target primer should occur (in the reverse complement of this template)
      * @return the complete template
      */
-    private static String buildTemplate(int templateSize, String targetPrimer, int targetPrimerLocation, Directionality primerDirection) {
+    private static String buildTemplateWithPrimer(int templateSize, String targetPrimer, int targetPrimerLocation) {
 
         int index = 0; 
         StringBuilder sb = new StringBuilder();
@@ -81,6 +81,20 @@ public class PrimerMatcher {
 
         return sb.toString();
     }
+
+    private static String buildTemplateNoPrimer(int templateSize) {
+
+        int index = 0; 
+        StringBuilder sb = new StringBuilder();
+
+        while (index < templateSize) {
+                sb.append(getRandomBase());
+                index++;
+        }
+
+        return sb.toString();
+    }
+
 
     private static String getRandomBase() {
 
