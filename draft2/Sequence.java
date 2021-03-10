@@ -114,13 +114,13 @@ public class Sequence {
         }
 
         Directionality d;
-        if (direction.equals(FIVE_PRIME))
-            d = THREE_PRIME;
+        if (direction.equals(Directionality.FIVE_PRIME))
+            d = Directionality.THREE_PRIME;
         else {
-            d = FIVE_PRIME;
+            d = Directionality.FIVE_PRIME;
         }
         
-        String rcSeq = generateComplement(generateReverse(s.sequence));
+        String rcSeq = generateComplement(generateReverse(this.sequence));
 
         this.reverseComplement = new Sequence(rcName, rcSeq, d);
     }
