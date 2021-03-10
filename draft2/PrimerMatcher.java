@@ -16,7 +16,7 @@ public class PrimerMatcher {
 
     public static void main(String[] args) {
 
-        demoLatency();
+        demoThroughput();
         // Create very large template
 
         // Create Sequence objects from input
@@ -112,7 +112,7 @@ public class PrimerMatcher {
         }
     }
 
-    private static void demoLatency() {
+    private static void demoThroughput() {
         final int TEMPLATE_SIZE = 1_000_000;
         String primer = "XXXXXXXXXXXXXXXXXXXX";
 
