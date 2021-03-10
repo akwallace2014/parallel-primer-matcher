@@ -81,12 +81,9 @@ public class Sequence {
      * If a sequence direction is 5', then the reverse sequence will be 3'
      * Example: sequence = 5' CAT 3', reverse = 3' TAC 5'
      * 
-     * @return the reverse of the sequence
+     * @return the reverse of the sequence or null if it's not set
      */
     public String reverse() {
-        if (reverse == null) 
-            return generateReverse(this.sequence);
-        
         return reverse;
     }
 
@@ -130,7 +127,7 @@ public class Sequence {
      * Example 1:  sequence = 5' CAT 3', reverse complement = 3' GTA 5'
      * Example 2:  sequence = 3' GTC 5', reverse complement = 5' CAC 3'
      * 
-     * @return a Sequence object encapsulating this sequence's reverse complement
+     * @return a Sequence object encapsulating this sequence's reverse complement or null if it has not been set yet
      */
     public Sequence reverseComplement() {
         return reverseComplement;
