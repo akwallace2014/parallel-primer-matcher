@@ -10,11 +10,10 @@
 public class Sequence {
 
     private String name;
-    private String sequence;            // 5' to 3'
-    private String complement;          // 5' to 3'
-    private String reverseComplement;   // 3' to 5'
+    private String sequence;            // DNA sequence          
+    private Directionality direction;   // 5' or 3' when read left to right
+    private Sequence reverseComplement; 
     private int length;
-    private boolean doubleStranded;
 
     /**
      * Constructor
@@ -23,29 +22,39 @@ public class Sequence {
      * Only native bases (A, C, G, T) supported
      * 
      * @param name identifier for this sequence
-     * @param sequence the DNA sequence 5' to 3'
-     * @param doubleStranded true if this sequence represents dsDNA, false if
-     * single-stranded
+     * @param sequence the DNA sequence
+     * @param direction whether sequence is read 5' to 3' (FIVE_PRIME) or 
+     * 3' to 5' (THREE_PRIME)
      * @throws IllegalArgumentException for the following cases:
      *      - Blank sequence
      *      - Null sequence
      *      - Sequence < 2 characters long
      *      - Non-native bases detected in sequence
      */
-    Sequence(String name, String sequence, boolean doubleStranded) throws IllegalArgumentException {
+    Sequence(String name, String sequence, Directionality direction) throws IllegalArgumentException {
 
         validateSequence(sequence);
 
         this.name = name;
         String trimmed = sequence.replaceAll("\\s", "");
         trimmed = trimmed.toUpperCase();
-
         this.sequence = trimmed;
-        this.doubleStranded = doubleStranded;
-        length = trimmed.length();
-        this.complement = generateComplement(trimmed);
-        this.reverseComplement = generateReverse(complement);
+
+        this.length = this.sequence.length();
+
+        this.direction = direction;
+
+        reverseComplement = makeReverseComplement();
     }
+
+    /**
+     * 
+     * @return
+     */
+    public Directionality direction() {
+        return direction;
+    }
+
 
     /**
      * Getter for sequence
@@ -57,20 +66,45 @@ public class Sequence {
     }
 
     /**
-     * Getter for complement
+     * Getter for reverse sequence
+     * If a sequence direction is 5', then the reverse sequence will be 3'
+     * Example: sequence = 5' CAT 3', reverse = 3' TAC 5'
      * 
-     * @return the complement of the sequence read 5' to 3', left to right
+     * @return the reverse of the sequence
      */
-    public String complement() {
-        return complement;
+    public String reverse() {
+        return generateReverse(this.sequence);
+    }
+
+    /**
+     * Makes a reverse complement for a sequence
+     * Example:  sequence = 5' CAT 3', reverse complement = 3' GTA 5'
+     * 
+     * @return the reverse complement of the sequence
+     */
+    private Sequence makeReverseComplement() {
+        Directionality d;
+        if (direction.equals(FIVE_PRIME))
+            d = THREE_PRIME;
+        else {
+            d = FIVE_PRIME;
+        }
+        
+        String rcName = this.name + " REVERSE COMPLEMENT";
+
+        String rcSeq = generateComplement(generateReverse(this.sequence));
+
+        return new Sequence(rcName, rcSeq, d);
     }
 
     /**
      * Getter for reverse complement
+     * Example 1:  sequence = 5' CAT 3', reverse complement = 3' GTA 5'
+     * Example 2:  sequence = 3' GTC 5', reverse complement = 5' CAC 3'
      * 
-     * @return the reverse complement of the sequence read 3' to 5', left to right
+     * @return a Sequence object encapsulating this sequence's reverse complement
      */
-    public String reverseComplement() {
+    public Sequence reverseComplement() {
         return reverseComplement;
     }
 
@@ -94,18 +128,8 @@ public class Sequence {
     }
 
     /**
-     * Getter for double-stranded
-     * 
-     * @return true if double-stranded, false if single-stranded
-     */
-    public boolean isDoubleStranded() {
-        return doubleStranded;
-    }
-
-    /**
      * Determines whether 2 Sequence objects are equal
-     * Does not account for name, only sequence contents 
-     * Does not test size or revStrand fields as they are all derived from fwdStrand field
+     * Does not account for name, only sequence and directionality
      * @return true if internal sequences are the same, false if not
      */
     @Override
@@ -119,11 +143,11 @@ public class Sequence {
         
         Sequence thatObj = (Sequence) that;
         
-        return this.sequence.equals(thatObj.sequence);
+        return this.direction.equals(thatObj.direction) && this.sequence.equals(thatObj.sequence);
         }
 
     /**
-     * Generates the complement of a sequence (read 5' to 3')
+     * Generates the complement of any sequence
      * Trims whitespaces from sequence
      * Only processes native bases (A/a, G/g, C/c, T/t)
      * 
@@ -169,7 +193,8 @@ public class Sequence {
     }
 
     /**
-     * Reverses the direction of a sequence to read 3' to 5', left to right
+     * Reverses the direction of a sequence 
+     * Application programmer must keep track of directionality 
      * Does not change the input sequence
      * 
      * @param seq input sequence
