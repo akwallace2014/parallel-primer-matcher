@@ -1,3 +1,11 @@
+/*
+ * Alisa Wallace
+ * CPSC 5600 Parallel Computing 
+ * Seattle University, WQ 2021 with Kevin Lundeen
+ * Final Project
+ * 
+ * This is free and unencumbered software released into the public domain.
+ */
 
 import java.util.*;
 
@@ -26,9 +34,9 @@ public class ReplicationProduct {
      * @param primer primer Sequence
      * @throws IllegalArgumentException if template and primer are of same direction 
      */
-    public ReplicationProduct(String name, Sequence template, Sequence primer) {
+    public ReplicationProduct(String name, Sequence template, Sequence primer) throws IllegalArgumentException {
 
-        testDirectionality(template, primer);
+        validateDirectionality(template, primer);
         this.template = template;
         this.primer = primer;
 
@@ -90,7 +98,7 @@ public class ReplicationProduct {
         analyzed = true;
     }
 
-    private testDirectionality(Sequence a, Sequence b) {
+    private validateDirectionality(Sequence a, Sequence b) throws IllegalArgumentException {
         if (a.direction().equals(b.direction()))
             throw new IllegalArgumentException("Invalid sequence inputs.  Sequences must be of opposite directionality or no replication can occur.");
     }
