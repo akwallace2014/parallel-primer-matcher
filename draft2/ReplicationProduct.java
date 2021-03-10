@@ -64,7 +64,7 @@ public class ReplicationProduct {
         return matchLocations.get(i);
     }
 
-    public String getMatchProduct(int i) {
+    public Sequence getMatchProduct(int i) {
         return matchProducts.get(i);
     }
 
@@ -79,7 +79,7 @@ public class ReplicationProduct {
     public void findAllMatches() {
         
         if (template.reverseComplement() == null) 
-            template.setReverseComplement();
+            template.setReverseComplement(null);
         
         Sequence templateRC = template.reverseComplement();
         String text = templateRC.sequence();
@@ -98,7 +98,7 @@ public class ReplicationProduct {
         analyzed = true;
     }
 
-    private validateDirectionality(Sequence a, Sequence b) throws IllegalArgumentException {
+    private void validateDirectionality(Sequence a, Sequence b) throws IllegalArgumentException {
         if (a.direction().equals(b.direction()))
             throw new IllegalArgumentException("Invalid sequence inputs.  Sequences must be of opposite directionality or no replication can occur.");
     }

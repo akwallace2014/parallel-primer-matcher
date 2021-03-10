@@ -94,7 +94,7 @@ public class Sequence {
      * Auto-generates and sets reverse sequence field for this Sequence.
      */
     public void setReverse() {
-        reverse = generateComplement(this.sequence);
+        reverse = generateReverse(this.sequence);
     }
 
 
