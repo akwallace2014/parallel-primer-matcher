@@ -106,6 +106,38 @@ public class ReplicationProduct {
         analyzed = true;
     }
 
+    public void findAllMatchesParallel(int numThreads) {
+        
+        if (template.reverseComplement() == null) 
+            template.setReverseComplement(null);
+        
+        Sequence templateRC = template.reverseComplement();
+        String text = templateRC.sequence();
+        String pattern = primer.sequence();
+        
+        ParallelMatcher pm = new ParallelMatcher(text, pattern, numThreads);
+        matchLocations = pm.findMatches();
+
+        for (int i = 0; i < matchLocations.size(); i++) {
+            int location = matchLocations.get(i);
+
+            String product;
+            if (primer.direction().equals(Directionality.FIVE_PRIME)) {
+               product = text.substring(location);
+            }
+            else {
+                product = text.substring(0, location + primer.length());
+            }
+    
+            String productName = this.name + " product " + i;
+            Sequence s = new Sequence(productName, product, primer.direction());
+            matchProducts.add(s);
+        }
+
+        analyzed = true;
+    }
+
+
     private void validateDirectionality(Sequence a, Sequence b) throws IllegalArgumentException {
         if (a.direction().equals(b.direction()))
             throw new IllegalArgumentException("Invalid sequence inputs.  Sequences must be of opposite directionality or no replication can occur.");
