@@ -53,7 +53,7 @@ public class ParallelMatcher {
         for (int i = 0; i < numThreads; i++) {
             int start = i * sectionSize;
             int end;
-            if (i == numThreads)
+            if (i == numThreads - 1)
                 end = tLength;
             else {
                 end = start + sectionSize;
@@ -135,6 +135,15 @@ public class ParallelMatcher {
                     addMatch(t);
                 } 
             }
+
+            // check if remainder has pattern
+            // if (id == numThreads) {
+            //     int nextIndex = end - pLength + 1;
+            //     String remainder = template.substring(nextIndex);
+            //     if (remainder.equals(pattern)) {
+            //         addMatch(nextIndex);
+            //     }
+            // }
         }
 
         private synchronized void addMatch(int location) {

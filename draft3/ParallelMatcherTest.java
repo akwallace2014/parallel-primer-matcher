@@ -76,8 +76,26 @@ public class ParallelMatcherTest {
     public void testFindMatchesMultipleThreadsLargeInput() {
 
         int patternSize = 10;
+        int repeatSize = 100;
+        int repeats = 10;
+
+        // Pattern occurs [repeats] number of times in size [repeats * repeatSize] template 
+
         String pattern = "x".repeat(patternSize);
-        String template = makeTemplate(pattern, 100, 3);
+        String template = makeTemplate(pattern, repeatSize, repeats);
+
+        ParallelMatcher pm = new ParallelMatcher(template, pattern, 8);
+
+        ArrayList<Integer> matches = pm.findMatches();
+
+        assertTrue(matches.size() == repeats);
+
+        Collections.sort(matches);
+        for (int i = 0; i < matches.size(); i++) {
+            int expected = (repeatSize - patternSize) + (i * repeatSize);
+            int actual = matches.get(i);
+            assertTrue(expected == actual);
+        }
     }
 
     private String makeTemplate(String pattern, int sectionLength, int repeats) {
