@@ -145,7 +145,7 @@ public class SequenceMatcher {
         // Since we are only ever adding (and not deleting) no need to move
         // to a thread-safe collection
         private synchronized void addMatch(int location) {
-            System.out.println("Thread " + id + " adding match " + location);
+            // System.out.println("Thread " + id + " adding match " + location);
             matches.add(location);
         }
 

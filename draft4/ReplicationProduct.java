@@ -78,14 +78,18 @@ public class ReplicationProduct {
 
     public void findAllMatches() {
         
-        if (template.reverseComplement() == null) 
-            template.setReverseComplement(null);
+        // if (template.reverseComplement() == null) 
+        //     template.setReverseComplement(null);
         
-        Sequence templateRC = template.reverseComplement();
-        String text = templateRC.sequence();
+        // Sequence templateRC = template.reverseComplement();
+        // String text = templateRC.sequence();
+        String text = template.sequence();
         String pattern = primer.sequence();
         
-        matchLocations = Matcher.findMatches(text, pattern);
+        // matchLocations = Matcher.findMatches(text, pattern);
+        SequenceMatcher sm = new SequenceMatcher(text, pattern, 4);
+        matchLocations = sm.findMatches();
+        Collections.sort(matchLocations);
 
         for (int i = 0; i < matchLocations.size(); i++) {
             int location = matchLocations.get(i);
@@ -97,6 +101,8 @@ public class ReplicationProduct {
             else {
                 product = text.substring(0, location + primer.length());
             }
+
+            product = Sequence.generateComplement(product);
     
             String productName = this.name + " product " + i;
             Sequence s = new Sequence(productName, product, primer.direction());
@@ -112,15 +118,22 @@ public class ReplicationProduct {
      */
     public void findAllMatchesParallel(int numThreads) {
         
-        if (template.reverseComplement() == null) 
-            template.setReverseComplement(null);
+        // if (template.reverseComplement() == null) 
+        //     template.setReverseComplement(null);
         
-        Sequence templateRC = template.reverseComplement();
-        String text = templateRC.sequence();
+        // Sequence templateRC = template.reverseComplement();
+        // String text = templateRC.sequence();
+        // String pattern = primer.sequence();
+        
+        // ParallelMatcher pm = new ParallelMatcher(text, pattern, numThreads);
+        // matchLocations = pm.findMatches();
+        // Collections.sort(matchLocations);
+
+        String text = template.sequence();
         String pattern = primer.sequence();
         
-        ParallelMatcher pm = new ParallelMatcher(text, pattern, numThreads);
-        matchLocations = pm.findMatches();
+        SequenceMatcher sm = new SequenceMatcher(text, pattern, 4);
+        matchLocations = sm.findMatches();
         Collections.sort(matchLocations);
 
         for (int i = 0; i < matchLocations.size(); i++) {
@@ -133,6 +146,8 @@ public class ReplicationProduct {
             else {
                 product = text.substring(0, location + primer.length());
             }
+
+            product = Sequence.generateComplement(product);
     
             String productName = this.name + " product " + i;
             Sequence s = new Sequence(productName, product, primer.direction());
