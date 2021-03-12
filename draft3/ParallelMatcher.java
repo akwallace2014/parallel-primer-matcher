@@ -40,12 +40,6 @@ public class ParallelMatcher {
      */
     public ArrayList<Integer> findMatches() {
     
-
-        // if (pattern.equals(template)) {
-        //     matches.add(0);
-        //     return matches;
-        // }
-
         int tLength = template.length();
     
         int sectionSize = tLength / numThreads;
@@ -112,17 +106,25 @@ public class ParallelMatcher {
 
         public void run() {
             
-            // if (id == 0) {
-            //     try {
-            //         TimeUnit.MILLISECONDS.sleep(100);
-            //     }
-            //     catch (InterruptedException e) {}
-            // }
             System.out.println("Running from thread " + id);
 
             int pLength = pattern.length();
+            
+            // Only last thread needs to worry about index out of bounds 
+            // exception - other threads will potentially cross into 
+            // subsequent threads' sections when matching but only up to 
+            // p - 1 indices
+            // Not allowing this means matches starting after index 
+            // (end - pLength) will be missed for all threads but the last one
+            int last;
+            if (id == numThreads) {
+                last = end - pLength;
+            }
+            else {
+                last = end - 1;
+            }
 
-            for (int t = start; t <= end - pLength; t++) {
+            for (int t = start; t <= last; t++) {
             
                 int p;      // tracks pattern index
                 for (p = 0; p < pLength; p++) {

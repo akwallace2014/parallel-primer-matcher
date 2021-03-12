@@ -106,6 +106,10 @@ public class ReplicationProduct {
         analyzed = true;
     }
 
+    /**
+     * Parallelized version of findAllMatches
+     * @param numThreads number of threads to use in parallel algorithm
+     */
     public void findAllMatchesParallel(int numThreads) {
         
         if (template.reverseComplement() == null) 
@@ -117,6 +121,7 @@ public class ReplicationProduct {
         
         ParallelMatcher pm = new ParallelMatcher(text, pattern, numThreads);
         matchLocations = pm.findMatches();
+        Collections.sort(matchLocations);
 
         for (int i = 0; i < matchLocations.size(); i++) {
             int location = matchLocations.get(i);
