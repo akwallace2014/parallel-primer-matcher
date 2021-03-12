@@ -8,8 +8,7 @@
  */
 
 import java.util.*;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
 
 public class SequenceMatcher {
     
@@ -19,7 +18,6 @@ public class SequenceMatcher {
     private String pattern;
     private ArrayList<Integer> matches;
     private ArrayList<Thread> threads;
-    private CyclicBarrier barrier;
 
 
     public SequenceMatcher(String template, String pattern, int numThreads) {
@@ -31,7 +29,6 @@ public class SequenceMatcher {
         this.numThreads = numThreads;
         matches = new ArrayList<Integer>();
         threads = new ArrayList<Thread>();
-        barrier = new CyclicBarrier(numThreads);
     }
 
 
@@ -41,7 +38,7 @@ public class SequenceMatcher {
      * @return a list of start indices in template where there is a match or 
      * null if there are no matches
      */
-    public ArrayList<Integer> findMatchesParallel() {
+    public ArrayList<Integer> findMatches() {
     
         int tLength = template.length();
     
@@ -72,50 +69,6 @@ public class SequenceMatcher {
         return matches;
 
     }
-
-
-    public ArrayList<Integer> findMatchesSequential() {
-    
-        int tLength = template.length();
-        int pLength = pattern.length();
-
-        for (int t = 0; t <= tLength - pLength; t++) {
-            
-            int p;      // tracks pattern index
-            for (p = 0; p < pLength; p++) {
-                char tempBase = template.charAt(t + p);
-                char primBase = pattern.charAt(p);
-                    if (! isComplement(tempBase, primBase)) 
-                        break;
-            }
-
-            if (p == pLength) {
-                // we've found the complete pattern
-                matches.add(t);
-            } 
-        }
-        
-        return matches;
-    }
-
-    private boolean isComplement(Character base1, Character base2) {
-
-        base1 = Character.toUpperCase(base1);
-        base2 = Character.toUpperCase(base2);
-        switch (base1){
-            case 'A':
-                return base2.equals('T');
-            case 'C':
-                return base2.equals('G');
-            case 'G':
-                return base2.equals('C');
-            case 'T':
-                return base2.equals('A');
-            default:
-                return false;
-        }
-    }
-
 
     /**
      * For testing purposes only
@@ -185,15 +138,6 @@ public class SequenceMatcher {
                     addMatch(t);
                 } 
             }
-            // try {
-            //     barrier.await();
-            // }
-            // catch (InterruptedException e) {
-            //     System.out.println("Cyclic barrier interrupted");
-            // }
-            // catch (BrokenBarrierException e) {
-            //     System.out.println("Cyclic barrier broken.");
-            // }
         }
 
         // ArrayList is not thread safe so we need to synchronize here
@@ -203,6 +147,25 @@ public class SequenceMatcher {
         private synchronized void addMatch(int location) {
             // System.out.println("Thread " + id + " adding match " + location);
             matches.add(location);
+        }
+
+        private boolean isComplement(Character base1, Character base2) {
+
+            base1 = Character.toUpperCase(base1);
+            base2 = Character.toUpperCase(base2);
+            switch (base1){
+                case 'A':
+                    return base2.equals('T');
+                case 'C':
+                    return base2.equals('G');
+                case 'G':
+                    return base2.equals('C');
+                case 'T':
+                    return base2.equals('A');
+                default:
+                    return false;
+            }
+
         }
     }
 }

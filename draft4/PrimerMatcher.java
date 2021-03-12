@@ -13,7 +13,12 @@ public class PrimerMatcher {
 
     private static final Directionality FIVE = Directionality.FIVE_PRIME;
     private static final Directionality THREE = Directionality.THREE_PRIME;
+
+    private static final long TIME_ALLOWED = 5;     // seconds
     private static final int NUM_THREADS = 16;
+
+    private static final int TEMPLATE_SIZE = 1 << 22;
+    private static final int PRIMER_SIZE = 20;
 
     public static void main(String[] args) {
 
@@ -108,21 +113,19 @@ public class PrimerMatcher {
     }
 
     private static void demoThroughput(boolean parallel) {
-        final int TEMPLATE_SIZE = 1 << 22;
-        String primer = "XXXXXXXXXXXXXXXXXXXX";
-
-        final long TIME_ALLOWED = 5;
+        
+        String primer = "X".repeat(PRIMER_SIZE);
 
         int totalSequences = 0;
 
+        String template = buildTemplateNoPrimer(TEMPLATE_SIZE);
+        Sequence primer5p = new Sequence("Latency test primer", primer, FIVE);
+        Sequence template3p = new Sequence("Latency test template", template, THREE);
+
+        ReplicationProduct rp = new ReplicationProduct("Latency test", template3p, primer5p);
+
         long start = System.currentTimeMillis();
         while (System.currentTimeMillis() < start + TIME_ALLOWED * 1000) {
-
-            String template = buildTemplateNoPrimer(TEMPLATE_SIZE);
-            Sequence primer5p = new Sequence("Latency test primer", primer, FIVE);
-            Sequence template3p = new Sequence("Latency test template", template, THREE);
-
-            ReplicationProduct rp = new ReplicationProduct("Latency test", template3p, primer5p);
 
             if (parallel)
                 rp.findAllMatchesParallel(NUM_THREADS);
@@ -135,4 +138,9 @@ public class PrimerMatcher {
         System.out.println("Searched " + totalSequences + " " + TEMPLATE_SIZE + " bp templates in " + TIME_ALLOWED + " seconds");
 
     }
+
+    private static void demoLatency(boolean parallel) {
+
+    }
+
 }

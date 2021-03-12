@@ -87,8 +87,8 @@ public class ReplicationProduct {
         String pattern = primer.sequence();
         
         // matchLocations = Matcher.findMatches(text, pattern);
-        SequenceMatcher sm = new SequenceMatcher(text, pattern, 4);
-        matchLocations = sm.findMatches();
+        SequenceMatcher sm = new SequenceMatcher(text, pattern, 0);
+        matchLocations = sm.findMatchesSequential();
         Collections.sort(matchLocations);
 
         for (int i = 0; i < matchLocations.size(); i++) {
@@ -132,8 +132,8 @@ public class ReplicationProduct {
         String text = template.sequence();
         String pattern = primer.sequence();
         
-        SequenceMatcher sm = new SequenceMatcher(text, pattern, 4);
-        matchLocations = sm.findMatches();
+        SequenceMatcher sm = new SequenceMatcher(text, pattern, numThreads);
+        matchLocations = sm.findMatchesParallel();
         Collections.sort(matchLocations);
 
         for (int i = 0; i < matchLocations.size(); i++) {
