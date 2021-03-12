@@ -146,6 +146,10 @@ public class ParallelMatcher {
             // }
         }
 
+        // ArrayList is not thread safe so we need to synchronize here
+        // to avoid a data race
+        // Since we are only ever adding (and not deleting) no need to move
+        // to a thread-safe collection
         private synchronized void addMatch(int location) {
             System.out.println("Thread " + id + " adding match " + location);
             matches.add(location);

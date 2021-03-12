@@ -8,20 +8,41 @@
  */
 
 /**
- * Notes: to conserve space, setting reverse sequence and reverse
- * complement must be done manually 
+ * This class encapsulates a single stranded DNA sequence.
+ * It also includes two static class methods for convenient manipulation of the
+ * String representation of a sequence.
+ * 
+ * Only native bases (A, C, G, T) are currently supported in the sequence 
+ * String when generating the reverse complement.  To save time and account for
+ * very large input Strings the constructor does not test for native bases -
+ * instead input is verified when the reverse complement is generated.  Though
+ * the reverse complement of a sequence is a field it is by default set to null
+ * and the reverse complement must be manually set (with another Sequence
+ * object) or generated.  This is to again account for very large input Strings
+ * conserve space unless the application programmer deems it necessary.  The
+ * same is true for setting and storing the reverse of a sequence. 
+ * 
+ * Sequence examples:
+ * sequence:            5' A A A C G T C G 3'
+ * complement:             T T T G C A G C      (no inherent directionality)
+ * reverse complement:  3' T T T G C A G C 5'   (directional)
+ * reverse:             3' G C T G C A A A 5'   (directional)
+ * 
+ * @author Alisa Wallace
+ * @version 2.0  
+ * 
  */
 public class Sequence {
 
-    private String name;
-    private String sequence;            // DNA sequence 
-    private String reverse;         
+    private String name;                // name for this sequence
+    private String sequence;            // DNA sequence (e.g ACGT)
+    private String reverse;             // Sequence read in opposite direction
     private Directionality direction;   // 5' or 3' when read left to right
-    private Sequence reverseComplement; 
-    private int length;
+    private Sequence reverseComplement; // 
+    private int length;                 // length of the sequence
 
     /**
-     * Constructor
+     * Constructor.
      * Accepts a single sequence and auto-generates reverse complement
      * Trims incoming sequence of all whitespaces and converts to all uppercase
      * Only native bases (A, C, G, T) supported
@@ -59,8 +80,8 @@ public class Sequence {
     }
 
     /**
-     * 
-     * @return
+     * Getter for direction field
+     * @return direction
      */
     public Directionality direction() {
         return direction;
@@ -69,8 +90,7 @@ public class Sequence {
 
     /**
      * Getter for sequence
-     * 
-     * @return the sequence read 5' to 3', left to right
+     * @return the sequence of bases
      */
     public String sequence() {
         return sequence;
@@ -80,7 +100,6 @@ public class Sequence {
      * Getter for reverse sequence
      * If a sequence direction is 5', then the reverse sequence will be 3'
      * Example: sequence = 5' CAT 3', reverse = 3' TAC 5'
-     * 
      * @return the reverse of the sequence or null if it's not set
      */
     public String reverse() {
@@ -99,9 +118,7 @@ public class Sequence {
 
     /**
      * Auto-generates and sets the reverse complement for this Sequence.  
-     * 
-     * @param name name to be stored for the reverse complement
-     * 
+     * @param name name to be stored for the reverse complement Sequence
      */
     public void setReverseComplement(String name) {
         
@@ -127,9 +144,26 @@ public class Sequence {
     }
 
     /**
+     * Other setter for reverse complement.
+     * Accepts a pre-existing Sequence object.
+     * @param rc the Sequence object that is this sequence's reverse complement
+     * @throws IllegalArgumentException if Sequence is not of the opposite
+     * directionality of this sequence(e.g. if this sequence is 5', rc must be
+     * 3')
+     */
+    public void setReverseComplementSequence(Sequence rc) throws IllegalArgumentException {
+        
+        if (rc.direction().equals(this.direction)) {
+            throw new IllegalArgumentException("The reverse complement of this sequence must be of the opposite sequence direction (e.g., 3' if this sequence is 5' and vice versa).");
+        }
+
+        reverseComplement = rc;
+    }
+
+    /**
      * Getter for reverse complement
      * Example 1:  sequence = 5' CAT 3', reverse complement = 3' GTA 5'
-     * Example 2:  sequence = 3' GTC 5', reverse complement = 5' CAC 3'
+     * Example 2:  sequence = 3' GTC 5', reverse complement = 5' CAG 3'
      * 
      * @return a Sequence object encapsulating this sequence's reverse complement or null if it has not been set yet
      */
@@ -139,7 +173,6 @@ public class Sequence {
 
     /**
      * Getter for length of sequences
-     * 
      * @return length of the sequences
      */
     public int length() {
@@ -149,7 +182,6 @@ public class Sequence {
 
     /**
      * Getter for name of the sequences
-     * 
      * @return name
      */
     public String name() {
@@ -158,12 +190,11 @@ public class Sequence {
 
     /**
      * Determines whether 2 Sequence objects are equal
-     * Does not account for name, only sequence and directionality
      * @return true if internal sequences are the same, false if not
      */
     @Override
     public boolean equals(Object that) {
-
+        // TODO add in other fields to test
         if (this == that) 
             return true;
 
@@ -176,9 +207,18 @@ public class Sequence {
         }
 
     
+    /**
+     * Class method to generate the complement of a provided sequence String.
+     * Note the returned String implies no directionality.
+     * Only native bases accepted (Characters A/a, C/c, G/g, and T/t).
+     * Removes all whitespaces and casts all characters to upper-case.
+     * Example:  input = CAT, output = GTA
+     */
     public static String generateComplement(String seq) throws IllegalArgumentException {
+        
         validateSequence(seq);
-
+        seq = seq.replaceAll("\\s", "");
+        seq = seq.toUpperCase();
         char[] original = seq.toCharArray();
         char[] complement = new char[seq.length()];
 
