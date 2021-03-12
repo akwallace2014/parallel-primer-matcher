@@ -10,7 +10,7 @@
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class ParallelMatcher {
+public class SequenceMatcher {
     
     private static final int MIN_LENGTH = 1;
     private int numThreads;
@@ -20,7 +20,7 @@ public class ParallelMatcher {
     private ArrayList<Thread> threads;
 
 
-    public ParallelMatcher(String template, String pattern, int numThreads) {
+    public SequenceMatcher(String template, String pattern, int numThreads) {
         
         validateInput(template, pattern);
 
@@ -126,7 +126,10 @@ public class ParallelMatcher {
             
                 int p;      // tracks pattern index
                 for (p = 0; p < pLength; p++) {
-                    if (template.charAt(t + p) != pattern.charAt(p)) 
+                    
+                    char tempBase = template.charAt(t + p);
+                    char primBase = pattern.charAt(p);
+                    if (! isComplement(tempBase, primBase)) 
                         break;
                 }
     
@@ -135,15 +138,6 @@ public class ParallelMatcher {
                     addMatch(t);
                 } 
             }
-
-            // check if remainder has pattern
-            // if (id == numThreads) {
-            //     int nextIndex = end - pLength + 1;
-            //     String remainder = template.substring(nextIndex);
-            //     if (remainder.equals(pattern)) {
-            //         addMatch(nextIndex);
-            //     }
-            // }
         }
 
         // ArrayList is not thread safe so we need to synchronize here
@@ -154,5 +148,25 @@ public class ParallelMatcher {
             System.out.println("Thread " + id + " adding match " + location);
             matches.add(location);
         }
+
+        private boolean isComplement(Character base1, Character base2) {
+
+            base1 = Character.toUpperCase(base1);
+            base2 = Character.toUpperCase(base2);
+            switch (base1){
+                case 'A':
+                    return base2.equals('T');
+                case 'C':
+                    return base2.equals('G');
+                case 'G':
+                    return base2.equals('C');
+                case 'T':
+                    return base2.equals('A');
+                default:
+                    return false;
+            }
+
+        }
     }
 }
+

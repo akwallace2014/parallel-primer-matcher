@@ -13,17 +13,12 @@ public class PrimerMatcher {
 
     private static final Directionality FIVE = Directionality.FIVE_PRIME;
     private static final Directionality THREE = Directionality.THREE_PRIME;
+    private static final int NUM_THREADS = 16;
 
     public static void main(String[] args) {
 
-        demoThroughput();
-        // Create very large template
-
-        // Create Sequence objects from input
-
-        // Create replication result
-
-        // Print output
+        boolean parallel = true;   // toggle to true to demo parallel
+        demoThroughput(parallel);
 
     }
 
@@ -112,8 +107,8 @@ public class PrimerMatcher {
         }
     }
 
-    private static void demoThroughput() {
-        final int TEMPLATE_SIZE = 1_000_000;
+    private static void demoThroughput(boolean parallel) {
+        final int TEMPLATE_SIZE = 1 << 22;
         String primer = "XXXXXXXXXXXXXXXXXXXX";
 
         final long TIME_ALLOWED = 5;
@@ -129,7 +124,11 @@ public class PrimerMatcher {
 
             ReplicationProduct rp = new ReplicationProduct("Latency test", template3p, primer5p);
 
-            rp.findAllMatches();
+            if (parallel)
+                rp.findAllMatchesParallel(NUM_THREADS);
+            else {
+                rp.findAllMatches();
+            }
             totalSequences++;
         }
 
