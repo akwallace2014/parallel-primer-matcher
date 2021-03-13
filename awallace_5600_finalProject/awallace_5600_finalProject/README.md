@@ -1,14 +1,24 @@
-## Getting Started
+Alisa Wallace
+CPSC 5600 Parallel Computing 
+Seattle University, WQ 2021 with Kevin Lundeen
+Final Project
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Run Instructions 
 
-## Folder Structure
+Program is built to not require any user input to run and demonstrate function.
 
-The workspace contains two folders by default, where:
+Note: All required files for demos are in 'main' package.  Unit tests (JUnit 5)
+are included to demonstrate thoroughness in testing and design but do not need
+to be run. If using Makefile and terminal unit test classes are not included.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+# Option 1: IDE
 
-## Dependency Management
+1.  Open the awallace_5600_finalProject folder in your IDE.
+2.  Project structure is such that no reconfiguration should be necessary.
+3.  Run main method in PrimerMatcher.java
 
-The `JAVA DEPENDENCIES` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-pack/blob/master/release-notes/v0.9.0.md#work-with-jar-files-directly).
+# Option 2: Terminal 
+
+1.  Navigate to awallace_5600_finalProject/src/main in the CLI
+2.  enter `make all` - all classes should compile
+3.  enter `java PrimerMatcher` - demo should start
