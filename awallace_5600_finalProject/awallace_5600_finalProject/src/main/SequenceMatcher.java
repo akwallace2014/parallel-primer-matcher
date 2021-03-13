@@ -26,6 +26,9 @@ import java.util.*;
  * 
  * References: GeeksforGeeks 
  * (https://www.geeksforgeeks.org/naive-algorithm-for-pattern-searching/)
+ * 
+ * @author Alisa Wallace
+ * @version 1.4
  */
 public class SequenceMatcher {
     
