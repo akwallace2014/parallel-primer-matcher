@@ -6,6 +6,7 @@
  * 
  * This is free and unencumbered software released into the public domain.
  */
+package main;
 
 import java.util.*;
 
