@@ -135,15 +135,6 @@ public class ParallelMatcher {
                     addMatch(t);
                 } 
             }
-
-            // check if remainder has pattern
-            // if (id == numThreads) {
-            //     int nextIndex = end - pLength + 1;
-            //     String remainder = template.substring(nextIndex);
-            //     if (remainder.equals(pattern)) {
-            //         addMatch(nextIndex);
-            //     }
-            // }
         }
 
         // ArrayList is not thread safe so we need to synchronize here

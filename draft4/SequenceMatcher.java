@@ -19,19 +19,17 @@ public class SequenceMatcher {
     private String pattern;
     private ArrayList<Integer> matches;
     private ArrayList<Thread> threads;
-    private CyclicBarrier barrier;
+    boolean matchComplement;         // false for exact match between template
+                                    // and pattern, true for base complement
 
-
-    public SequenceMatcher(String template, String pattern, int numThreads) {
+    public SequenceMatcher(String template, String pattern) {
         
         validateInput(template, pattern);
 
         this.template = template;
         this.pattern = pattern;
-        this.numThreads = numThreads;
         matches = new ArrayList<Integer>();
         threads = new ArrayList<Thread>();
-        barrier = new CyclicBarrier(numThreads);
     }
 
 
@@ -41,8 +39,10 @@ public class SequenceMatcher {
      * @return a list of start indices in template where there is a match or 
      * null if there are no matches
      */
-    public ArrayList<Integer> findMatchesParallel() {
-    
+    public ArrayList<Integer> findMatchesParallel(int numThreads, boolean matchComplement) {
+        
+        this.matchComplement = matchComplement;
+        this.numThreads = numThreads;
         int tLength = template.length();
     
         int sectionSize = tLength / numThreads;
@@ -74,8 +74,9 @@ public class SequenceMatcher {
     }
 
 
-    public ArrayList<Integer> findMatchesSequential() {
+    public ArrayList<Integer> findMatchesSequential(boolean matchComplement) {
     
+        this.matchComplement = matchComplement;
         int tLength = template.length();
         int pLength = pattern.length();
 
@@ -85,7 +86,7 @@ public class SequenceMatcher {
             for (p = 0; p < pLength; p++) {
                 char tempBase = template.charAt(t + p);
                 char primBase = pattern.charAt(p);
-                    if (! isComplement(tempBase, primBase)) 
+                    if (! isMatch(tempBase, primBase))
                         break;
             }
 
@@ -96,6 +97,13 @@ public class SequenceMatcher {
         }
         
         return matches;
+    }
+
+    private boolean isMatch(char a, char b) {
+        if (matchComplement) {
+            return isComplement(a, b);
+        }
+        return a == b;
     }
 
     private boolean isComplement(Character base1, Character base2) {
@@ -114,15 +122,6 @@ public class SequenceMatcher {
             default:
                 return false;
         }
-    }
-
-
-    /**
-     * For testing purposes only
-     * @return
-     */
-    public ArrayList<Thread> getThreads() {
-        return threads;
     }
 
     private void validateInput(String template, String pattern) throws IllegalArgumentException {
@@ -176,7 +175,7 @@ public class SequenceMatcher {
                     
                     char tempBase = template.charAt(t + p);
                     char primBase = pattern.charAt(p);
-                    if (! isComplement(tempBase, primBase)) 
+                    if (! isMatch(tempBase, primBase)) 
                         break;
                 }
     

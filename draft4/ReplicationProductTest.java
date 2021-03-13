@@ -105,7 +105,7 @@ public class ReplicationProductTest {
         int loc4 = t1sub4.length() - p1Rev.length();    // 84
 
 
-        rp1.findAllMatches();
+        rp1.findAllMatchesSequential();
 
         System.out.println("Num matches = " + rp1.numMatches());
 
@@ -173,7 +173,7 @@ public class ReplicationProductTest {
         Sequence expected4 = new Sequence("t1subproduct4", sub4, five);
         int loc4 = t1.length() - sub4.length();     // 84
 
-        rp1.findAllMatches();
+        rp1.findAllMatchesSequential();
 
         assertTrue(rp1.isAnalyzed());
         assertFalse(rp1.isEmpty());
@@ -211,7 +211,7 @@ public class ReplicationProductTest {
 
         ReplicationProduct rp2 = new ReplicationProduct("Test 3", template1, primer1Rev);
 
-        rp2.findAllMatches();
+        rp2.findAllMatchesSequential();
 
         assertTrue(rp2.isAnalyzed());
         assertTrue(rp2.isEmpty());
@@ -228,7 +228,7 @@ public class ReplicationProductTest {
         Sequence p1partial = new Sequence("t1PartialMatch", p1RevPartialMatch, three);
         ReplicationProduct rp2 = new ReplicationProduct("Test 4", template1, p1partial);
 
-        rp2.findAllMatches();
+        rp2.findAllMatchesSequential();
 
         assertTrue(rp2.isAnalyzed());
         assertTrue(rp2.isEmpty());
@@ -258,14 +258,14 @@ public class ReplicationProductTest {
      * Should throw IllegalArgumentException.
      */
     @Test
-    public void testMatcherException() {
+    public void testSequenceMatcherException() {
 
         // swap template and primer so matching looks for template sequence
         // in primer sequence
         ReplicationProduct rp3 = new ReplicationProduct("Exception", primer1Rev, template1);
 
         try {
-            rp3.findAllMatches();
+            rp3.findAllMatchesSequential();
             fail();
         }
         catch (IllegalArgumentException e) {}

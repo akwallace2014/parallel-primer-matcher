@@ -76,19 +76,13 @@ public class ReplicationProduct {
         return primer;
     }
 
-    public void findAllMatches() {
+    public void findAllMatchesSequential() {
         
-        // if (template.reverseComplement() == null) 
-        //     template.setReverseComplement(null);
-        
-        // Sequence templateRC = template.reverseComplement();
-        // String text = templateRC.sequence();
         String text = template.sequence();
         String pattern = primer.sequence();
         
-        // matchLocations = Matcher.findMatches(text, pattern);
-        SequenceMatcher sm = new SequenceMatcher(text, pattern, 1);
-        matchLocations = sm.findMatchesSequential();
+        SequenceMatcher sm = new SequenceMatcher(text, pattern);
+        matchLocations = sm.findMatchesSequential(true);
         Collections.sort(matchLocations);
 
         for (int i = 0; i < matchLocations.size(); i++) {
@@ -132,8 +126,8 @@ public class ReplicationProduct {
         String text = template.sequence();
         String pattern = primer.sequence();
         
-        SequenceMatcher sm = new SequenceMatcher(text, pattern, numThreads);
-        matchLocations = sm.findMatchesParallel();
+        SequenceMatcher sm = new SequenceMatcher(text, pattern);
+        matchLocations = sm.findMatchesParallel(numThreads, true);
         Collections.sort(matchLocations);
 
         for (int i = 0; i < matchLocations.size(); i++) {
