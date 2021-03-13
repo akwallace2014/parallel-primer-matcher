@@ -15,14 +15,14 @@ public class PrimerMatcher {
     private static final Directionality THREE = Directionality.THREE_PRIME;
 
     private static final long TIME_ALLOWED = 5;     // seconds
-    private static final int NUM_THREADS = 16;
+    private static final int NUM_THREADS = 2;
 
     private static final int TEMPLATE_SIZE = 1 << 22;
     private static final int PRIMER_SIZE = 20;
 
     public static void main(String[] args) {
 
-        boolean parallel = true;   // toggle to true to demo parallel
+        boolean parallel = false;   // toggle to true to demo parallel
         demoThroughput(parallel);
 
     }

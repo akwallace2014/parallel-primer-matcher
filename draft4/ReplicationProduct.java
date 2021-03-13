@@ -87,7 +87,7 @@ public class ReplicationProduct {
         String pattern = primer.sequence();
         
         // matchLocations = Matcher.findMatches(text, pattern);
-        SequenceMatcher sm = new SequenceMatcher(text, pattern, 0);
+        SequenceMatcher sm = new SequenceMatcher(text, pattern, 1);
         matchLocations = sm.findMatchesSequential();
         Collections.sort(matchLocations);
 
